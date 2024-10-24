@@ -1,34 +1,68 @@
 import streamlit as st
-import plotly.express as px
 import pandas as pd
+import plotly.graph_objects as go
 
-# Load sample data
+st.set_page_config(layout="wide")
+
+st.title("Stock Data Visualization")
+
+## Stock Selection
+ticker = st.sidebar.text_input("Enter Stock Ticker", "AAPL")
+start_date = st.sidebar.date_input("Start Date")
+end_date = st.sidebar.date_input("End Date")
+
+## Fetch Data
 @st.cache_data
-def load_data():
-    return pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv')
+def load_data(ticker):
+    data = pd.read_csv('../temp_analysis/data/stock_data_sp500.csv')
+    data['Ticker'] = ticker
+    return data
 
-df = load_data()
+data = load_data(ticker)
 
-# Set page title
-st.set_page_config(page_title="Interactive Country Data Visualization")
+if data.empty:
+    st.error("No data available for the selected stock and date range.")
+else:
+    ## Display Raw Data
+    st.subheader("Raw Data")
+    st.dataframe(data.head())
 
-# App title
-st.title('Interactive Country Data Visualization')
+    ## Candlestick Chart
+    st.subheader("Candlestick Chart")
+    fig = go.Figure(data=[go.Candlestick(x=data.index,
+                                         open=data['Open'],
+                                         high=data['High'],
+                                         low=data['Low'],
+                                         close=data['Close'])])
+    fig.update_layout(xaxis_rangeslider_visible=False)
+    st.plotly_chart(fig, use_container_width=True)
 
-# Country selection dropdown
-selected_country = st.selectbox(
-    'Choose a country:',
-    options=df['country'].unique(),
-    index=df['country'].unique().tolist().index('Canada')
-)
+    ## Moving Averages
+    st.subheader("Moving Averages")
+    ma_periods = st.multiselect("Select MA periods", [10, 20, 50, 100, 200], default=[20, 50])
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=data.index, y=data['Close'], name='Close Price'))
+    
+    for period in ma_periods:
+        ma_column = f'MA_{period}'
+        data[ma_column] = data['Close'].rolling(window=period).mean()
+        fig.add_trace(go.Scatter(x=data.index, y=data[ma_column], name=f'{period}-day MA'))
+    
+    fig.update_layout(title=f"{ticker} Stock Price with Moving Averages",
+                      xaxis_title="Date",
+                      yaxis_title="Price")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Filter data based on selected country
-filtered_df = df[df['country'] == selected_country]
+    ## Volume Chart
+    st.subheader("Volume Chart")
+    fig = go.Figure(data=[go.Bar(x=data.index, y=data['Volume'])])
+    fig.update_layout(title=f"{ticker} Trading Volume",
+                      xaxis_title="Date",
+                      yaxis_title="Volume")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Create and display the graph
-fig = px.line(filtered_df, x='year', y='lifeExp', title=f'Life Expectancy in {selected_country}')
-st.plotly_chart(fig)
-
-# Optional: Display the data
-if st.checkbox('Show raw data'):
-    st.write(filtered_df)
+    ## Summary Statistics
+    st.subheader("Summary Statistics")
+    summary = data['Close'].describe()
+    st.table(summary)
