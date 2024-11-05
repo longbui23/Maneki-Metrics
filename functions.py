@@ -4,9 +4,9 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 
 # Function to load data
-def load_data(ticker, start_date, end_date):
+def load_data(ticker):
     df = pd.read_csv("Data/all_stock_data.csv")
-    df = df[df['Tickers'] == ticker]
+    df = df[df['Ticker'] == ticker]
     return df
 
 # Function to create candlestick chart
@@ -65,6 +65,7 @@ def create_macd_chart(data):
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.plot(data.index, data['MACD'], label='MACD', color='blue')
     ax.plot(data.index, data['Signal'], label='Signal Line', color='red')
+    data['Histogram'] = data['MACD'] - data['Signal']
     ax.bar(data.index, data['Histogram'], label='Histogram', color='gray', alpha=0.3)
     
     ax.set_title('MACD')
