@@ -15,9 +15,6 @@ def main():
         # Load data
         data = fs.load_data(ticker)
 
-    # Load data
-    data = fs.load_data("")
-
     # Display charts
     st.subheader("Candlestick Chart")
     st.plotly_chart(fs.create_candlestick_chart(data), use_container_width=True)
