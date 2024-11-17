@@ -3,76 +3,61 @@ import sys
 from datetime import datetime, timedelta
 import requests
 
+import extract
+import transform
+import load
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
+#params
 default_args = {
     'owner': 'LongBui',
     'start_date': datetime(2024, 10, 10),
 }
 
 
-def get_data():
-    import requests
+dag = DAG(
+    'stock_data_etl',
+    default_args = default_args,
+    description = 'ETL ',
+    description='ETL process for S&P 500 stock data',
+    schedule_interval=timedelta(days=1),
+)
 
-    res = requests.get("https://random.org/api/")
-    res =  res.json()
+extract_sp500_task = PythonOperator(
+    task_id = 'extract_sp500_task',
+    python_callable = extract.fetch_sp500,
+    provide_context = True,
+    dag = dag,
+)
 
-    return res
+extract_stock_task = PythonOperator(
+    task_id = 'extract_stock_task',
+    python_callable = extract.fetch_stock_data,
+    provide_context = True,
+    dag = dag,
+)
 
+extract_financial_task = PythonOperator(
+    task_id = 'track_stock_statistics',
+    python_callable = extract.track_stock_statistics,
+    provide_context = True,
+    dag = dag,
+)
 
-def format_data(res):
-    data = {}
-    location = res['location']
-    data['id'] = uuid.uuid4()
-    data['first_name'] = res['name']['first']
-    data['last_name'] = res['name']['last']
-    data['gender'] = res['gender']
-    data['address'] = f"{str(location['street']['number'])} {location['street']['name']}, " \
-                      f"{location['city']}, {location['state']}, {location['country']}"
-    data['post_code'] = location['postcode']
-    data['email'] = res['email']
-    data['username'] = res['login']['username']
-    data['dob'] = res['dob']['date']
-    data['registered_date'] = res['registered']['date']
-    data['phone'] = res['phone']
-    data['picture'] = res['picture']['medium']
+transform_task = PythonOperator(
+    task_id='transform_task',
+    python_callable= transform.transform_data,
+    provide_context=True,
+    dag=dag,
+)
 
-    return data
+load_task = PythonOperator(
+    task_id='load_task',
+    python_callable=load.load_data,
+    provide_context=True,
+    dag=dag,
+)
 
-
-def stream_data():
-    import json
-    from kafka import KafkaProducer
-    import time
-    import logging
-
-    producer = KafkaProducer(bootstrap_servers=['broker:29092'], max_block_ms=50000)
-    curr_time = time.time()
-
-    while True:
-        if time.time() > curr_time + 60:
-            break
-        try:
-            res = get_data()
-            res = format_data()
-
-            producer.send('user_created', json.dumps(res).encode('utf-8'))
-
-        except Exception as e:
-            logging.erorr(f'An error occured: {e}')
-            continue
-
-        with DAG('user_automation',
-                 default_args=default_args,
-                 schedule_interval = '@daily',
-                 catchup=False) as dag:
-            
-            streaming_task = PythonOperator(
-                task_id = 'stream_data_from_api',
-                python_callable = stream_data,
-            )
-
-
-
+extract_sp500_task >> extract_financial_task >> extract_stock_task >> transform_task >> load_task
