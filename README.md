@@ -3,4 +3,4 @@
 ## 1) Goals
 
 ## 2) System Architecture
-![System Architecture](data/system.drawio.png)
+![System Architecture](system.drawio.png)
