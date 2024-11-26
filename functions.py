@@ -2,12 +2,26 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
+import boto3
+import io
 
-# Function to load data
+    
+
+# Function to load data (temporary used s3)
 def load_data(ticker):
-    df = pd.read_csv("Data/all_stock_data.csv")
-    df = df[df['Ticker'] == ticker]
-    return df
+    s3 = boto3.resource(
+        's3'
+    )
+
+    bucket_name = 'stockbucketlonglong'
+    file_key = 'staging/all_stock_data.csv'
+
+    obj = s3.get_object(Bucket=bucket_name, Key=file_key)
+    file_content = obj['Body'].read().decode('utf-8')
+    df = pd.read_csv(io.StringIO(file_content))
+
+    return df[df['Symbol']==ticker]
+
 
 # Function to create candlestick chart
 def create_candlestick_chart(data):
@@ -28,7 +42,6 @@ def create_candlestick_chart(data):
 
 # Function to create SMA and EMA chart
 def create_ma_chart(data):
-    
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.plot(data.index, data['Close'], label='Close Price', color='blue')
     ax.plot(data.index, data['SMA_20'], label='20-Day SMA', color='red')
@@ -44,7 +57,6 @@ def create_ma_chart(data):
 
 # Function to create RSI chart
 def create_rsi_chart(data):
-    
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.plot(data.index, data['RSI'], label='RSI', color='purple')
     ax.axhline(70, color='red', linestyle='--', label='Overbought (70)')
@@ -61,7 +73,6 @@ def create_rsi_chart(data):
 
 # Function to create MACD chart
 def create_macd_chart(data):
-    
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.plot(data.index, data['MACD'], label='MACD', color='blue')
     ax.plot(data.index, data['Signal'], label='Signal Line', color='red')
@@ -79,7 +90,6 @@ def create_macd_chart(data):
 
 # Function to create Bollinger Bands chart
 def create_bollinger_bands_chart(data):
-    
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.plot(data.index, data['Close'], label='Close', color='blue')
     ax.plot(data.index, data['Upper_Band'], label='Upper Band', color='red', linestyle='--')
