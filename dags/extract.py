@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import yfinance as yf
 from datetime import datetime, timedelta
 
+
 #fetch sp500 companies
 def fetch_sp500():
     url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
@@ -15,17 +16,18 @@ def fetch_sp500():
     table = soup.find('table', {'id': 'constituents'})
     sp500_comp_df = pd.read_html(str(table))[0]
     sp500_comp_df.columns = sp500_comp_df.columns.str.replace('\n', ' ')
-
-    print("S&P 500 companies data has been fetched and stored in sp500_comp_df.")
     
     return sp500_comp_df
+
+def fetch_sp500_info():
+    info = yFinance.info
 
 #fetch stock data
 def fetch_stock_data(sp500_comp_df):
     tickers = sp500_comp_df['Symbol'].tolist()
 
     end_date = datetime.now().date()
-    start_date = end_date - timedelta(days=730)
+    start_date = end_date - timedelta(days=365*5)
 
     all_stock_data = []
 

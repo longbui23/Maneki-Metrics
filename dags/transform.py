@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
 
+
+##sp500
+
+##stock
 def cal_sma_ema_20(df_ticker):
     df_ticker['SMA_20'] = df_ticker.groupby('Ticker')['Close'].transform(lambda x: x.rolling(window=20).mean())
     df_ticker['EMA_20'] = df_ticker.groupby('Ticker')['Close'].transform(lambda x: x.ewm(span=20, adjust=False).mean())

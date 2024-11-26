@@ -1,3 +1,6 @@
 # Real-time-Stock-Dashboard
 
-API Lists: https://author-ide.skills.network/render?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZF9pbnN0cnVjdGlvbnNfdXJsIjoiaHR0cHM6Ly9jZi1jb3Vyc2VzLWRhdGEuczMudXMuY2xvdWQtb2JqZWN0LXN0b3JhZ2UuYXBwZG9tYWluLmNsb3VkL0lCTURldmVsb3BlclNraWxsc05ldHdvcmstUFkwMTAxRU4tU2tpbGxzTmV0d29yay9sYWJzLzIwMDMzNi4wMzFfTW9kdWxlXzVfR2xvc3NhcnkubWQiLCJ0b29sX3R5cGUiOiJpbnN0cnVjdGlvbmFsLWxhYiIsImF0bGFzX2ZpbGVfaWQiOjEwODc3LCJhZG1pbiI6ZmFsc2UsImlhdCI6MTcyOTEwMTU4NH0.kf8t3mQK6g_gNWJC5SR1yIeMSnI8AhenNIgf1GoeITk
+## 1) Goals
+
+## 2) System Architecture
+![System Architecture](data/system.drawio.png)

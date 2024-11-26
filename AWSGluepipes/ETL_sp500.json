@@ -1,0 +1,202 @@
+{
+	"dag": {
+		"node-1732505179075": {
+			"classification": "DataSource",
+			"type": "S3",
+			"name": "Amazon S3",
+			"inputs": [],
+			"isCatalog": false,
+			"recurse": true,
+			"paths": [
+				"s3://stockbucketlonglong/staging/sp500_companies.csv"
+			],
+			"additionalOptions": {
+				"enableSamplePath": false,
+				"samplePath": "s3://stockbucketlonglong/staging/sp500_companies.csv"
+			},
+			"inferSchemaChanged": false,
+			"format": "csv",
+			"iconUrl": "https://a.b.cdn.console.awsstatic.com/a/v1/VHFV4RAZKMKMJZBATSR24L24OMJZN4SZ5DUFAHLOLVKJYIK7W3OA/static/media/s3.2a166713.svg",
+			"generatedNodeName": "AmazonS3_node1732505179075",
+			"codeGenVersion": 2,
+			"separator": ",",
+			"quoteChar": "\"",
+			"withHeader": true,
+			"escaper": "",
+			"outputSchemas": [
+				[
+					{
+						"key": "Symbol",
+						"fullPath": [
+							"Symbol"
+						],
+						"type": "string"
+					},
+					{
+						"key": "Security",
+						"fullPath": [
+							"Security"
+						],
+						"type": "string"
+					},
+					{
+						"key": "GICS Sector",
+						"fullPath": [
+							"GICS Sector"
+						],
+						"type": "string"
+					},
+					{
+						"key": "GICS Sub-Industry",
+						"fullPath": [
+							"GICS Sub-Industry"
+						],
+						"type": "string"
+					},
+					{
+						"key": "Headquarters Location",
+						"fullPath": [
+							"Headquarters Location"
+						],
+						"type": "string"
+					},
+					{
+						"key": "Date added",
+						"fullPath": [
+							"Date added"
+						],
+						"type": "string"
+					},
+					{
+						"key": "CIK",
+						"fullPath": [
+							"CIK"
+						],
+						"type": "string"
+					},
+					{
+						"key": "Founded",
+						"fullPath": [
+							"Founded"
+						],
+						"type": "string"
+					}
+				]
+			]
+		},
+		"node-1732505239733": {
+			"classification": "DataSink",
+			"type": "AmazonRedshift",
+			"name": "Amazon Redshift",
+			"inputs": [
+				"node-1732505179075"
+			],
+			"data": {
+				"accessType": "connection",
+				"sourceType": "table",
+				"action": "truncate",
+				"mergeAction": "simple",
+				"mergeWhenMatched": "update",
+				"mergeWhenNotMatched": "insert",
+				"upsert": false,
+				"selectedColumns": [],
+				"tableSchema": [
+					{
+						"value": "Symbol",
+						"label": "Symbol",
+						"description": "VARCHAR"
+					},
+					{
+						"value": "Security",
+						"label": "Security",
+						"description": "VARCHAR"
+					},
+					{
+						"value": "GICS Sector",
+						"label": "GICS Sector",
+						"description": "VARCHAR"
+					},
+					{
+						"value": "GICS Sub-Industry",
+						"label": "GICS Sub-Industry",
+						"description": "VARCHAR"
+					},
+					{
+						"value": "Headquarters Location",
+						"label": "Headquarters Location",
+						"description": "VARCHAR"
+					},
+					{
+						"value": "Date added",
+						"label": "Date added",
+						"description": "VARCHAR"
+					},
+					{
+						"value": "CIK",
+						"label": "CIK",
+						"description": "VARCHAR"
+					},
+					{
+						"value": "Founded",
+						"label": "Founded",
+						"description": "VARCHAR"
+					}
+				],
+				"tempDir": "s3://aws-glue-assets-779846797040-us-east-2/temporary/",
+				"advancedOptions": [],
+				"connection": {
+					"value": "Redshift connection"
+				},
+				"schema": {
+					"label": "public",
+					"value": "public"
+				},
+				"table": {
+					"label": "sp500",
+					"value": "sp500",
+					"description": "public"
+				},
+				"stagingTable": "public.sp500_temp_rhvj0h"
+			},
+			"iconUrl": "https://a.b.cdn.console.awsstatic.com/a/v1/VHFV4RAZKMKMJZBATSR24L24OMJZN4SZ5DUFAHLOLVKJYIK7W3OA/static/media/Redshift.29b8248a.svg",
+			"generatedNodeName": "AmazonRedshift_node1732505239733",
+			"codeGenVersion": 2
+		}
+	},
+	"jobConfig": {
+		"command": "glueetl",
+		"description": "",
+		"role": "",
+		"scriptName": "ETL_sp500.py",
+		"version": "4.0",
+		"language": "python-3",
+		"scriptLocation": "s3://aws-glue-assets-779846797040-us-east-2/scripts/",
+		"temporaryDirectory": "s3://aws-glue-assets-779846797040-us-east-2/temporary/",
+		"timeout": 2880,
+		"maxConcurrentRuns": 1,
+		"workerType": "G.1X",
+		"numberOfWorkers": 10,
+		"maxRetries": 0,
+		"metrics": true,
+		"observabilityMetrics": true,
+		"security": "none",
+		"bookmark": "job-bookmark-disable",
+		"logging": true,
+		"spark": true,
+		"sparkConfiguration": "standard",
+		"sparkPath": "s3://aws-glue-assets-779846797040-us-east-2/sparkHistoryLogs/",
+		"serverEncryption": false,
+		"glueHiveMetastore": true,
+		"etlAutoScaling": false,
+		"etlAutoTuning": true,
+		"jobParameters": [],
+		"tags": [],
+		"connectionsList": [
+			"Redshift connection"
+		],
+		"jobMode": "VISUAL_MODE",
+		"name": "ETL_sp500"
+	},
+	"hasBeenSaved": false,
+	"redshift-s3-select": "s3://aws-glue-assets-779846797040-us-east-2/temporary/"
+}
