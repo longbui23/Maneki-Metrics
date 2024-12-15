@@ -3,9 +3,9 @@ import sys
 from datetime import datetime, timedelta
 import requests
 
-import extract
-import transform
-import load
+import Airflowpipelines.plugins.extract as extract
+import Airflowpipelines.plugins.transform as transform
+import Airflowpipelines.plugins.load as load
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator, BranchPythonOperator

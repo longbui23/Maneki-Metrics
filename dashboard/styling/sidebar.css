@@ -1,0 +1,23 @@
+/* Sidebar Styling */
+.css-1d391kg {
+    background-color: #F7F7F7; /* Lighter background for the sidebar */
+    padding: 10px;
+    border-radius: 8px;
+}
+.css-1d391kg .stButton, .css-1d391kg .stSelectbox, .css-1d391kg .stRadio {
+    border-radius: 5px;
+    margin-bottom: 12px;
+}
+.css-1d391kg .stSelectbox select, .css-1d391kg .stRadio input {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+}
+.css-1d391kg h1, .css-1d391kg h2 {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+.css-1d391kg .stSelectbox div, .css-1d391kg .stRadio div {
+    color: #333;
+}
