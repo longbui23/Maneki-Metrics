@@ -1,0 +1,108 @@
+/* styles.css */
+/*Title*/
+.title {
+    font-size: 48px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff6a00, #ee0979);
+    background-clip: text;
+    color: transparent;
+    animation: gradient-animation 3s infinite;
+    text-align: center;
+}
+
+@keyframes gradient-animation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/*container*/
+.reportview-container {
+    background: linear-gradient(120deg, #2E2E2E, #4E4E4E);
+    color: white;
+}
+
+/* Style containers */
+[data-testid="stVerticalBlock"] > [style*="flex-direction: column;"] > [data-testid="stVerticalBlock"] {
+    border: 20px groove lightblue;
+}
+
+
+.sidebar .sidebar-content {
+    background: linear-gradient(120deg, #2E2E2E, #3E3E3E);
+}
+
+.stButton>button {
+    background-color: #00ADB5;
+    color: white;
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-size: 16px;
+}
+
+.stMetric {
+    font-size: 18px;
+}
+
+.divider {
+    height: 2px;
+    background: #00ADB5;
+    margin: 20px 0;
+}
+
+/*Metric Cards*/
+.metric-card {
+    background: linear-gradient(145deg, #1c1c1c, #3a3a3a);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+    width: 100%; /* Ensures full column width */
+    height: 150px; /* Fixed height for consistent size */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.metric-card h3 {
+    font-size: 1.2em;
+    margin: 0;
+}
+.metric-card p {
+    font-size: 1.5em;
+    margin: 5px 0;
+    font-weight: bold;
+}
+.metric-card span {
+    font-size: 1em;
+    color: #00ADB5;
+}
+
+/*News card*/
+.news-card {
+    background: linear-gradient(145deg, #1c1c1c, #3a3a3a);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 10px 0;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+.news-card h4 {
+    font-size: 1.2em;
+    margin: 0 0 10px;
+    color: #00ADB5;
+}
+.news-card p {
+    font-size: 1em;
+    margin: 0 0 10px;
+    line-height: 1.5;
+}
+.news-card a {
+    text-decoration: none;
+    color: #FFD700;
+    font-weight: bold;
+}
+.news-card a:hover {
+    text-decoration: underline;
+}
