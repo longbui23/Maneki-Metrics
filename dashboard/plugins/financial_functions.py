@@ -27,7 +27,7 @@ client = bigquery.Client(credentials=credentials)
 # Fetch data
 ##balance_sheet
 def fetch_balance_sheet_data(ticker):
-    qury = f'''SELECT * FROM  axial-sight-443417-a6.sp500.balance_sheet_2024 WHERE symbol = '{ticker}';'''
+    qury = f'''SELECT * FROM  axial-sight-443417-a6.sp500.balance_sheet_2024 WHERE string_field_0 = '{ticker}';'''
 
     query_job = client.query(qury)
     rows_raw = query_job.result()
@@ -35,20 +35,72 @@ def fetch_balance_sheet_data(ticker):
 
     return df
 
+##income-statement
+def fetch_income_stmt_data(ticker):
+    qury = f'''SELECT * FROM  axial-sight-443417-a6.sp500.income_stmt_2024 WHERE string_field_0 = '{ticker}';'''
+
+    query_job = client.query(qury)
+    rows_raw = query_job.result()
+    df = pd.DataFrame.from_records([dict(row) for row in rows_raw])
+
+    return df
+
+##cashflow
+def fetch_cash_flow_sheet_data(ticker):
+    qury = f'''SELECT * FROM  axial-sight-443417-a6.sp500.cash_flow_2024 WHERE symbol = '{ticker}';'''
+
+    query_job = client.query(qury)
+    rows_raw = query_job.result()
+    df = pd.DataFrame.from_records([dict(row) for row in rows_raw])
+
+    return df
+
+
+
 #Balance-Sheet plots
+def plot_table(df, title):
+    df_index = df.reset_index()
+    df_index.columns = ['Metrics', f'{title}']
+    headers = list(df_index.columns)
+    rows = df_index.values.tolist()
+
+    # Create the table
+    fig = go.Figure(
+        data=[
+            go.Table(
+                header=dict(
+                    values=headers,
+                    fill_color='lightblue',
+                    align='center',
+                    font=dict(size=14, color='black'),
+                ),
+                cells=dict(
+                    values=[df_index[col] for col in df_index.columns],
+                    fill_color='white',
+                    align='center',
+                    font=dict(size=12),
+                )
+            )
+        ]
+    )
+
+    # Update layout with title
+    fig.update_layout(title_text=title, title_x=0.5)
+    return fig
+
 ## basic val
 def key_balance_sheet_chart(df):
     fig = go.Figure()
 
     fig.add_trace(go.Bar(
-        x = ['Net Debt', 'Total Debt', 'Tangible Book Value', 'Cash And Cash Equivalents'],
-        y = df.iloc[0],
+        x = ['Net Debt', 'Total Debt'],
+        y = df[['Net Debt', 'Total Debt']],
         marker=dict(color='blue'),
         name = df.columns[0]
     )) 
 
     fig.update_layout(
-        title= f'{df.columns[0]} Balance Sheet Key Metrics',
+        title= f'Balance Sheet Key Metrics',
         xaxis_title='Metrics',
         yaxis_title='Amount (in billions)',
         template='plotly_white',
