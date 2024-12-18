@@ -12,7 +12,7 @@ def main():
     bigquery_client =cc.connect_bigquery()
     
     # Styling CSS
-    with open("../styling/general.css") as f:
+    with open("styling/general.css") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
     # Page Title
@@ -43,19 +43,19 @@ def main():
         col1, col2, col3, col4, col5 = st.columns(5)
         with col1:
             if st.button("📈 Market Dashboard"):
-                st.experimental_set_query_params(page="../pages/stock.py")
+                st.experimental_set_query_params(page="pages/stock.py")
         with col2:
             if st.button("📊 Stock Dashboard"):
-                st.experimental_set_query_params(page="../pages/stock.py")
+                st.experimental_set_query_params(page="pages/stock.py")
         with col3:
             if st.button("💬 Talk with Makeni AI"):
-                st.experimental_set_query_params(page="../pages/MakeniTalks.py")
+                st.experimental_set_query_params(page="pages/MakeniTalks.py")
         with col4:
             if st.button("🏢 Company Financial Portfolio"):
-                st.experimental_set_query_params(page="../pages/company.py")
+                st.experimental_set_query_params(page="pages/company.py")
         with col5:
             if st.button("🏢 Stock Prediction"):
-                st.experimental_set_query_params(page="../stock_prediction.py")
+                st.experimental_set_query_params(page="stock_prediction.py")
 
 
     # Market Overview in a Container
