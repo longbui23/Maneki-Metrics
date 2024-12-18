@@ -101,9 +101,3 @@ Incorporated OpenAI LLM to make a Makeni Chatbot where users can interact with t
 - Recommending certain stocks could lead to concentrated investment, artificially inflating prices and creating volatility.
 - Mitigation: Encourage diversification and educate audiences about the importance of balanced investment strategies.
 
-
-
-
-
-
-
