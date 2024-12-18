@@ -3,7 +3,8 @@
 import pandas as pd
 
 ## Local Packages
-import plugins.functions as fs
+import plugins.stock_functions as fs
+import plugins.cloud_connection as cc
 
 ## Visualization
 import plotly.graph_objects as go
@@ -16,9 +17,12 @@ st.set_page_config(page_title="Makeni.net", layout="wide", page_icon="🐱")
 # Styling CSS
 with open("styling/stock.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-    
+
+#connect to cloud
+bigquery_client = cc.connect_bigquery()
+
 # Data-loader
-df_sp500 = fs.fetch_sp500()
+df_sp500 = fs.fetch_company(bigquery_client)
 
 # Sidebar for settings
 st.sidebar.header("Dashboard Settings")
@@ -26,7 +30,7 @@ selected_stock = st.sidebar.selectbox("Select Stock", df_sp500['Symbol'])
 timeframe = st.sidebar.radio("Select Timeframe", ['1D', '1W', '1M'])
 
 # Filter stock
-df_filtered = fs.load_stock_data(selected_stock)
+df_filtered = fs.load_stock_data(bigquery_client, selected_stock)
 
 # Row 1: Stock Metrics
 with st.container():
@@ -71,12 +75,14 @@ with st.container():
     
     # Watchlist
     with col1:
+        df_companies= fs.load_companies_data(bigquery_client)
+        industry = df_companies[df_companies['Symbol']==selected_stock]['GICS Sector'].values[0]
+        stock_lst = df_companies[df_companies['GICS Sector']==industry]['Symbol'].tolist()
+
         st.write("### ⭐ Watchlist")
-        st.markdown("""
-        - 🟢 **AAPL**
-        - 🔵 **TSLA**
-        - 🟡 **GOOG**
-        """)
+        for stck in stock_lst:
+            emj = fs.generate_random_emoji_text()
+            st.markdown(f"{emj} {stck}")
     
     # Latest News
     with col2:

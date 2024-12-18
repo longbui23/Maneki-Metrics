@@ -3,6 +3,7 @@
 import yfinance as yf
 import datetime as dt
 import pandas as pd
+import random
 
 ##visualizations
 import streamlit as st
@@ -11,52 +12,9 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 from plotly.subplots import make_subplots
 
-#cloud
-import boto3 #AWS
-import io
-import certifi
-import urllib
-
-from google.oauth2 import service_account #GCP
-from google.cloud import bigquery 
-
-from pymongo.mongo_client import MongoClient #MongoDB
-from pymongo.server_api import ServerApi
-    
-credentials = service_account.Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"]
-)
-
-#credentials = service_account.Credentials.from_service_account_file('gcp_key.json')
-client = bigquery.Client(credentials=credentials)
-
-ca = certifi.where()
-uri = f"mongodb+srv://longb8186:longlong32@sp500comp.rnqta.mongodb.net/?retryWrites=true&w=majority&appName=SP500comp"
-
-# Create a new client and connect to the server
-mongo_client = MongoClient(uri, tlsCAFile=ca)
-
-#fetch data mongodb
-#def fetch_news(ticker):
-    #db = mongo_client['sp500']
-    #collection = db['news']
-
-    #all_news = collection.find_one({'Symbol':ticker})
-
 
 # Function to load data sp500
-def load_sp500():
-    qury = '''
-        SELECT * FROM  axial-sight-443417-a6.sp500.sp500_market_history
-    '''
-
-    query_job = client.query(qury)
-    rows_raw = query_job.result()
-    df = pd.DataFrame.from_records([dict(row) for row in rows_raw]).sort_values(by='Date')
-
-    return df
-
-def fetch_sp500():
+def fetch_company(client):
     qury = '''
         SELECT DISTINCT Symbol FROM axial-sight-443417-a6.sp500.companies
     '''
@@ -67,15 +25,22 @@ def fetch_sp500():
 
     return df
 
-def load_stock_data(ticker, today=None):
+def load_companies_data(client):
+    qury = f'''
+        SELECT * FROM  axial-sight-443417-a6.sp500.companies
+    '''
+
+    query_job = client.query(qury)
+    rows_raw = query_job.result()
+
+    df = pd.DataFrame.from_records([dict(row) for row in rows_raw])
+
+    return df
+
+def load_stock_data(client, ticker, today=None):
     if today == None:
         qury = f'''
             SELECT * FROM  axial-sight-443417-a6.sp500.stock_historical WHERE Ticker = '{ticker}'
-        '''
-    else:
-        qury = f'''
-            SELECT * FROM  axial-sight-443417-a6.sp500.stock_historical
-            WHERE DATE =  (SELECT MAX(DATE) FROM axial-sight-443417-a6.sp500.stock_historical)
         '''
 
     query_job = client.query(qury)
@@ -258,3 +223,15 @@ def fetch_news(ticker):
         })
 
     return latest_news
+
+#random emoji generator
+def generate_random_emoji_text(): 
+
+    categories = ["🐉", "🦄", "🐧", "🦊", "🐼", "🦋", "🐢", "🦁", "🐱", "🐘",
+                  "🍭", "🍫", "💎", "🔮", "🏰", "🪁", "🪶", "💰", "🎩", "📚",
+                  "🌊", "⛰️", "🌍", "🌈", "🌟", "💫", "🌿", "🌻", "🍃", "🌹",
+                  "🎉", "✨", "🎶", "🎵", "😄", "😊", "🥳", "💖", "😍", "😎"]
+
+    emji = random.choice(categories)
+    
+    return emji

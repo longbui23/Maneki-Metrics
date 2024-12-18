@@ -1,5 +1,6 @@
 import plugins.financial_functions as fs_main
-import plugins.functions as fs
+import plugins.stock_functions as fs
+import plugins.cloud_connection as cc
 
 import streamlit as st
 
@@ -11,7 +12,8 @@ with open("styling/sidebar.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 #Data-loader
-df_sp500 = fs.fetch_sp500()
+client = cc.connect_bigquery()
+df_sp500 = fs.fetch_company(client)
 
 # Sidebar for settings
 st.sidebar.header("Dashboard Settings")
