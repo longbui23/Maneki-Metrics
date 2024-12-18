@@ -15,7 +15,7 @@ import streamlit as st
 st.set_page_config(page_title="Makeni.net", layout="wide", page_icon="🐱")
 
 # Styling CSS
-with open("styling/stock.css") as f:
+with open("dashboard/styling/stock.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 #connect to cloud

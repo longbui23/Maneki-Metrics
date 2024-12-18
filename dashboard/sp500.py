@@ -12,7 +12,7 @@ def main():
     bigquery_client =cc.connect_bigquery()
     
     # Styling CSS
-    with open("styling/general.css") as f:
+    with open("dashboard/styling/general.css") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
     # Page Title
