@@ -1,6 +1,6 @@
 import streamlit as st
 import plugins.model as md
-import plugins.functions as fs
+import plugins.stock_functions as fs
 from sklearn.preprocessing import MinMaxScaler
 
 # Load the LSTM model
