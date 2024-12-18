@@ -16,6 +16,7 @@ import streamlit as st
 def connect_bigquery():
     credentials = service_account.Credentials.from_service_account_info(
     st.secrets["gcp_service_account"]
+    )
 
 
     #credentials = service_account.Credentials.from_service_account_file('gcp_key.json')
